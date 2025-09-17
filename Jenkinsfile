@@ -1,10 +1,17 @@
 pipeline {
     agent any
 
+    options {
+        // garante que o workspace seja limpo antes de cada execução
+        cleanWs()
+    }
+
     stages {
         stage('Checkout Source') {
             steps {
-                git url:'https://github.com/wekers/pedelogo-catalogo.git', branch:'main'
+                // Usa as configurações de SCM já definidas no job
+                checkout scm
+                //git url:'https://github.com/wekers/pedelogo-catalogo.git', branch:'main'
             }
         }
 
