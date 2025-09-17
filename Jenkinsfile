@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-     stages {
+    stages {
         stage('Cleanup Workspace') {
             steps {
                 // Limpa todos os arquivos do workspace
@@ -9,7 +9,6 @@ pipeline {
             }
         }
 
-    stages {
         stage('Checkout Source') {
             steps {
                 // Usa as configurações de SCM já definidas no job
