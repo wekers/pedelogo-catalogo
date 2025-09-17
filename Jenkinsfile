@@ -1,17 +1,20 @@
 pipeline {
     agent any
 
-    options {
-        // garante que o workspace seja limpo antes de cada execução
-        cleanWs()
-    }
+     stages {
+        stage('Cleanup Workspace') {
+            steps {
+                // Limpa todos os arquivos do workspace
+                sh 'rm -rf *'
+            }
+        }
 
     stages {
         stage('Checkout Source') {
             steps {
                 // Usa as configurações de SCM já definidas no job
                 checkout scm
-                //git url:'https://github.com/wekers/pedelogo-catalogo.git', branch:'main'
+            //git url:'https://github.com/wekers/pedelogo-catalogo.git', branch:'main'
             }
         }
 
@@ -34,4 +37,4 @@ pipeline {
             }
         }
     }
-}
+     }
