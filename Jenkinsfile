@@ -14,7 +14,6 @@ pipeline {
                     dockerapp = docker.build("wekers/api-produto:${env.BUILD_ID}",
                     '-f ./src/PedeLogo.Catalogo.Api/Dockerfile .')
                 }
-
             }
         }
         stage('Push Image') {
@@ -25,11 +24,7 @@ pipeline {
                         dockerapp.push("${env.BUILD_ID}")
                         }
                 }
-
             }
         }
     }
-
-}
-
 }
