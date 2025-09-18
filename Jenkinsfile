@@ -32,5 +32,20 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Kubernetes') {
+            agent {
+                Kubernetes {
+                    cloud 'localKubernetes'
+                }
+            }
+            enviroment {
+                tag_version = "${env.BUILD_ID}"
+            }
+            steps {
+                sh 'sed -i "s/{{tag}}/$tag_version/g" ./k8s/api.yaml'
+                sh 'cat ./k8s/api.yaml'
+                kubernetesDeploy(configs: '**/k8s/**', kubeconfigId: 'kubeconfig')
+            }
+        }
     }
 }
