@@ -34,7 +34,7 @@ pipeline {
         }
         stage('Deploy Kubernetes') {
             agent {
-                Kubernetes {
+                kubernetes {
                     cloud 'localKubernetes'
                 }
             }
