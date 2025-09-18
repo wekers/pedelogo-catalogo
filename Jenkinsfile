@@ -5,6 +5,11 @@ pipeline {
         skipDefaultCheckout(true) // Desabilita checkout automático do SCM
     }
 
+    environment {
+        // Gera um timestamp único no formato YYYYMMDD-HHMMSS
+        CUSTOM_TAG = sh(script: 'date +%Y%m%d-%H%M%S', returnStdout: true).trim()
+    }
+
     stages {
         stage('Checkout Source') {
             steps {
@@ -17,7 +22,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    dockerapp = docker.build("wekers/api-produto:${env.BUILD_ID}",
+                    dockerapp = docker.build("wekers/api-produto:${env.CUSTOM_TAG}",
                     '-f ./src/PedeLogo.Catalogo.Api/Dockerfile .')
                 }
             }
@@ -27,19 +32,17 @@ pipeline {
                 script {
                         docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
                         dockerapp.push('latest')
-                        dockerapp.push("${env.BUILD_ID}")
+                        dockerapp.push("${env.CUSTOM_TAG}")
                         }
                 }
             }
         }
         stage('Deploy Kubernetes') {
-            environment {
-                TAG_VERSION = "${env.BUILD_ID}"
-            }
+            
             steps {
                 script {
                     // Atualiza o YAML com a tag correta
-                    sh "sed -i 's/{{tag}}/${TAG_VERSION}/g' ./k8s/api.yaml"
+                    "sed -i 's/{{tag}}/${env.CUSTOM_TAG}/g' ./k8s/api.yaml"
 
                     // Aplica a configuração usando kubectl
                     withCredentials([file(credentialsId: 'localkubeConfig', variable: 'KUBECONFIG')]) {
