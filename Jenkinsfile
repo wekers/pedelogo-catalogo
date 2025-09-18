@@ -38,7 +38,6 @@ pipeline {
             }
         }
         stage('Deploy Kubernetes') {
-            
             steps {
                 script {
                     // Atualiza o YAML com a tag correta
