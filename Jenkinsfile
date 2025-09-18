@@ -1,13 +1,12 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true) // Desabilita checkout automático do SCM
+    }
+
     stages {
         stage('Cleanup Workspace') {
-            steps {
-                // Limpa todos os arquivos do workspace
-                sh 'rm -rf *'
-            }
-        }
 
         stage('Checkout Source') {
             steps {
@@ -35,5 +34,5 @@ pipeline {
                 }
             }
         }
+        }
     }
-}
