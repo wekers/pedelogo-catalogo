@@ -6,8 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Cleanup Workspace') {
-
         stage('Checkout Source') {
             steps {
                 // Usa as configurações de SCM já definidas no job
@@ -34,5 +32,5 @@ pipeline {
                 }
             }
         }
-        }
     }
+}
