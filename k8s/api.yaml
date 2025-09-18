@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: wekers/api-produto::{{tag}}
+          image: wekers/api-produto:{{tag}}
           ports:
             - containerPort: 80
           imagePullPolicy: Always
