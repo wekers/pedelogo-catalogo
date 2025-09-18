@@ -33,18 +33,23 @@ pipeline {
             }
         }
         stage('Deploy Kubernetes') {
-            agent {
-                kubernetes {
-                    cloud 'localKubernetes'
-                }
-            }
             environment {
-                tag_version = "${env.BUILD_ID}"
+                TAG_VERSION = "${env.BUILD_ID}"
             }
             steps {
-                sh 'sed -i "s/{{tag}}/$tag_version/g" ./k8s/api.yaml'
-                sh 'cat ./k8s/api.yaml'
-                kubernetesDeploy(configs: '**/k8s/**', kubeconfigId: 'kubeconfig')
+                script {
+                    // Atualiza o YAML com a tag correta
+                    sh "sed -i 's/{{tag}}/${TAG_VERSION}/g' ./k8s/api.yaml"
+
+                    // Aplica a configuração usando kubectl
+                    withCredentials([file(credentialsId: 'localkubeConfig', variable: 'KUBECONFIG')]) {
+                        sh """
+                            export KUBECONFIG=\${KUBECONFIG}
+                            kubectl apply -f ./k8s/api.yaml
+                            kubectl apply -f ./k8s/mongo.yaml
+                        """
+                    }
+                }
             }
         }
     }
